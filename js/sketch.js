@@ -6,7 +6,7 @@ function setup () {
   create();
 
   cam = createCamera();
-  cam.setPosition(2200, 1800, 2500);
+  cam.setPosition(2500, 2400, 3000);
 
 }
 
@@ -92,9 +92,28 @@ function create () {
 
   }
 
-  var portal1 = new Portal(2400, 3000, -PI / 2);
-  var portal2 = new Portal(1500, 2000, PI / 3);
+  STATIC_PROPS.angle = -PI / 9;
+  var ballSlide = new RectBody(610, 1755, 1500, 10, STATIC_PROPS);
+
+  var portal1 = new Portal(2500, 3500, -PI / 2);
+  var portal2 = new Portal(1800, 2000, -5 * PI / 4);
   portal1.link(portal2);
+
+  var portal3 = new Portal(4100, 3500, -PI / 2);
+  var portal4 = new Portal(1400, 2000, PI / 4);
+  portal3.link(portal4);
+
+  var portal5 = new Portal(1600, 2500, -PI / 2, 5);
+  var portal6 = new Portal(100, 3000, 0);
+  portal5.link(portal6);
+
+  STATIC_PROPS.angle = 0;
+  var squarePlatform = new RectBody(250, 3100, 300, 10, STATIC_PROPS);
+
+  STATIC_PROPS.angle = -PI / 4;
+  var squareRamp = new RectBody(675, 3380, 10, 800, STATIC_PROPS);
+
+
   
 }
 

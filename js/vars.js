@@ -94,7 +94,7 @@ var Engine = Matter.Engine,
     Bodies = Matter.Bodies,
     Composite = Matter.Composite;
 var engine = Engine.create(), cam;
-var DEBUG = true, CAM_SPEED = 50;
+var DEBUG = false, CAM_SPEED = 50;
 var item;
 
 var allBodies = [], portals = [];

@@ -1,9 +1,12 @@
-function Portal (x, y, angle) {
+function Portal (x, y, angle, scaleFactor) {
+
+    if (!scaleFactor) { this.scaleFactor = 1; }
+    else { this.scaleFactor = scaleFactor; }
 
     this.x = x;
     this.y = y;
-    this.w = 5;
-    this.h = 300;
+    this.w = 5 * this.scaleFactor;
+    this.h = 300 * this.scaleFactor;
     this.angle = angle;
     this.otherPortal = null;
     this.props = {
@@ -34,8 +37,23 @@ function Portal (x, y, angle) {
         stroke(this.props.render.strokeStyle);
         push();
         translate(this.body.position.x, this.body.position.y);
-        rotate(this.body.angle)
+        rotate(this.body.angle);
+
+        drawingContext.shadowColor = color(207, 7, 99);
+        drawingContext.shadowBlur = 20;
+        drawingContext.shadowOffsetX = 0;
+        drawingContext.shadowOffsetY = 0;
+        
         ellipse(0, 0, 100, this.h);
+
+        if (DEBUG) {
+
+            noStroke();
+            fill(this.props.render.strokeStyle);
+            rect (100, -10, 20, 20);
+
+        }
+
         pop();
 
     }
@@ -43,7 +61,6 @@ function Portal (x, y, angle) {
     this.link = function (otherPortal) {
         
         this.otherPortal = otherPortal;
-        this.otherPortal.otherPortal = this;
         this.props.render.strokeStyle = "#ffbc4f"; // orange
         this.otherPortal.props.render.strokeStyle = "#4fbeff"; // blue
     
@@ -55,14 +72,12 @@ function Portal (x, y, angle) {
 
             var body = allBodies[b].body;
 
-            if (Matter.Collision.collides(this.body, body) != null) {
+            if (Matter.Collision.collides(this.body, body) != null && this.otherPortal != null) {
 
-                console.log("collision");
-
-                var tX = this.otherPortal.body.position.x;
-                var tY = this.otherPortal.body.position.y;
-                Matter.Body.setPosition(body, { x: tX, y: tY });
-                // Matter.Body.rotate(body, this.otherPortal.body.angle - this.body.angle);
+                var tX = this.otherPortal.body.position.x - body.position.x;
+                var tY = this.otherPortal.body.position.y - body.position.y;
+                Matter.Body.translate(body, { x: tX, y: tY });
+                Matter.Body.rotate(body, this.otherPortal.body.angle - this.body.angle);
 
             }
 
