@@ -6,7 +6,7 @@ function setup () {
   create();
 
   cam = createCamera();
-  cam.setPosition(3000, 6000, 3000);
+  cam.setPosition(2900, 8900, 7000);
 
 }
 
@@ -170,6 +170,21 @@ function create () {
     var bLeft = new RectBody((4920 - segment * 520) - 350, (5800 + segment * 315) + 280, 10, 120, STATIC_PROPS);
 
   }
+
+  seesaw1 = new Balance(2400, 7500, 1200, 30, NORMAL_PROPS);
+  seesaw2 = new Balance(3400, 7900, 1200, 30, NORMAL_PROPS);
+  seesaw3 = new Balance(2400, 8300, 1200, 30, NORMAL_PROPS);
+  seesaw4 = new Balance(3400, 8700, 1200, 30, NORMAL_PROPS);
+  seesaw5 = new Balance(2000, 9600, 2250, 30, NORMAL_PROPS);
+
+  slab = new RectBody(850, 9300, 200, 10, STATIC_PROPS);
+  projectile = new CircBody(850, 9200, 200, NORMAL_PROPS);
+
+  // wind = new WindCannon(1600, 11000, -PI / 4, STATIC_PROPS);
+  wind = new WindCannon(1000, 11000, PI / 3, STATIC_PROPS);
+  wind.setLookOut(projectile);
+
+  b = new RectBody(1100, 11000, 100, 100, NORMAL_PROPS);
   
 }
 
