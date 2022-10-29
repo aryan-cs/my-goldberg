@@ -4,6 +4,7 @@ function CircBody (x, y, r, props) {
     this.y = y;
     this.r = r;
     this.props = props;
+    this.exists = true;
     
     this.body = Bodies.circle(this.x, this.y, this.r, this.props);
     Matter.World.add(engine.world, this.body);

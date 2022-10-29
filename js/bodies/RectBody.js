@@ -6,6 +6,7 @@ function RectBody (x, y, w, h, props) {
     this.h = h;
     this.roundness = 20;
     this.props = props;
+    this.exists = true;
     
     this.body = Bodies.rectangle(this.x, this.y, this.w, this.h, this.props);
     Matter.World.add(engine.world, this.body);

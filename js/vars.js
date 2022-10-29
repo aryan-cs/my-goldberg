@@ -94,10 +94,10 @@ var Engine = Matter.Engine,
     Bodies = Matter.Bodies,
     Composite = Matter.Composite;
 var engine = Engine.create(), cam;
-var DEBUG = false, CAM_SPEED = 50;
+var DEBUG = true, CAM_SPEED = 100;
 var item;
 
-var allBodies = [], portals = [];
+var allBodies = [], dominos = [], portals = [], balls = [];
 
 var NORMAL_PROPS = {
 

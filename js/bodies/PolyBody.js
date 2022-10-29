@@ -5,6 +5,7 @@ function PolyBody (x, y, s, r, props) {
     this.s = s;
     this.r = r;
     this.props = props;
+    this.exists = true;
     
     this.body = Bodies.polygon(this.x, this.y, this.s, this. r, this.props);
     Matter.World.add(engine.world, this.body);

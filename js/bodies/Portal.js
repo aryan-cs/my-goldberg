@@ -22,7 +22,8 @@ function Portal (x, y, angle, scaleFactor) {
 
         }
 
-    }
+    };
+    this.exists = true;
     
     this.body = Bodies.rectangle(this.x, this.y, this.w, this.h, this.props);
     Matter.World.add(engine.world, this.body);
@@ -38,11 +39,6 @@ function Portal (x, y, angle, scaleFactor) {
         push();
         translate(this.body.position.x, this.body.position.y);
         rotate(this.body.angle);
-
-        drawingContext.shadowColor = color(207, 7, 99);
-        drawingContext.shadowBlur = 20;
-        drawingContext.shadowOffsetX = 0;
-        drawingContext.shadowOffsetY = 0;
         
         ellipse(0, 0, 100, this.h);
 
@@ -72,17 +68,25 @@ function Portal (x, y, angle, scaleFactor) {
 
             var body = allBodies[b].body;
 
-            if (Matter.Collision.collides(this.body, body) != null && this.otherPortal != null) {
+            if (body) {
 
-                var tX = this.otherPortal.body.position.x - body.position.x;
-                var tY = this.otherPortal.body.position.y - body.position.y;
-                Matter.Body.translate(body, { x: tX, y: tY });
-                Matter.Body.rotate(body, this.otherPortal.body.angle - this.body.angle);
+                if (collides(this.body, body)) {
+
+                    if (this.otherPortal) {
+
+                        var tX = this.otherPortal.body.position.x - body.position.x;
+                        var tY = this.otherPortal.body.position.y - body.position.y;
+                        Matter.Body.translate(body, { x: tX, y: tY });
+                        Matter.Body.rotate(body, this.otherPortal.body.angle - this.body.angle);
+
+                    }
+
+                }
+
 
             }
 
         }
-
 
     }
 
