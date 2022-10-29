@@ -1,4 +1,4 @@
-function WindCannon (x, y, angle, props) {
+function WindCannon (x, y, props) {
 
     this.x = x;
     this.y = y;
@@ -7,7 +7,6 @@ function WindCannon (x, y, angle, props) {
     this.thickness = 20;
     this.roundness = 20;
     this.props = props;
-    this.props.angle = angle;
     this.lookout = null;
     this.exists = true;
     
@@ -27,14 +26,14 @@ function WindCannon (x, y, angle, props) {
         push();
 
         translate(this.body.position.x, this.body.position.y);
-        rotate(this.props.angle);
+        rotate(this.body.angle);
         rectMode(CENTER);
         noStroke();
 
         fill("lightblue");
         rect(0, 0, this.w * 1.8, this.thickness, this.roundness);
-        rect(-this.w / 1.1, -this.h / 2, this.thickness, this.h, this.roundness);
-        rect(this.w / 1.1, -this.h / 2, this.thickness, this.h, this.roundness);
+        rect(-this.w / 2, 0, this.thickness, this.h, this.roundness);
+        rect(this.w / 2, 0, this.thickness, this.h, this.roundness);
 
         stroke("white");
         strokeWeight(30);

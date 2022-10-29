@@ -11,7 +11,17 @@ function Trampoline (x, y, w, h, b, props) {
     this.exists = true;
     
     this.body = Bodies.rectangle(this.x, this.y, this.w, this.h, this.props);
-    Matter.World.add(engine.world, this.body);
+    this.springy1 = Matter.Constraint.create({ bodyA: this.body, pointB: { x: this.x - this.w, y: this.y }});
+    this.springy1.stiffness = 1;
+    this.springy2 = Matter.Constraint.create({ bodyA: this.body, pointB: { x: this.x + this.w, y: this.y }});
+    this.springy2.stiffness = 1;
+    STATIC_PROPS.angle = this.props.angle;
+
+    if (this.props.angle > 0) { this.support = new RectBody(this.x - 50 * cos(this.props.angle), this.y + 50, this.w, 20, STATIC_PROPS); }
+    else if (this.props.angle < 0) { this.support = new RectBody(this.x + 50 * cos(this.props.angle), this.y + 50, this.w, 20, STATIC_PROPS); }
+    else { this.support = new RectBody(this.x, this.y + 50, this.w, 20, STATIC_PROPS); }
+
+    Matter.World.add(engine.world, [this.body, this.springy1, this.springy2]);
     allBodies.push(this);
 
     this.show = function () {
@@ -34,7 +44,9 @@ function Trampoline (x, y, w, h, b, props) {
 
         if (this.lookout && collides(this.body, this.lookout.body)) {
 
-            accelerate(squareMass.body, -PI / 4, this.bounciness);
+            if (this.body.angle < 0) { accelerate(this.lookout.body, PI - this.body.angle, this.bounciness); }
+            else if (this.body.angle > 0) { accelerate(this.lookout.body, this.body.angle - (PI / 2), this.bounciness); }
+            else { accelerate(this.lookout.body, this.body.angle, this.bounciness); }
 
         }
 

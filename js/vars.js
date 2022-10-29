@@ -97,7 +97,7 @@ var engine = Engine.create(), cam;
 var DEBUG = true, CAM_SPEED = 100;
 var item;
 
-var allBodies = [], dominos = [], portals = [], balls = [];
+var allBodies = [], dominos = [], portals = [], balls = [], blocks = [];
 
 var NORMAL_PROPS = {
 

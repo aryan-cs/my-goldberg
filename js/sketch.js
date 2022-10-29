@@ -1,4 +1,8 @@
-function preload () { defaultFont = loadFont("assets/fonts/default.ttf"); }
+function preload () {
+  
+  defaultFont = loadFont("assets/fonts/default.ttf");
+
+}
 
 function setup () {
 
@@ -6,7 +10,7 @@ function setup () {
   create();
 
   cam = createCamera();
-  cam.setPosition(2900, 8900, 7000);
+  cam.setPosition(1000, 10000, 8000);
 
 }
 
@@ -116,8 +120,6 @@ function create () {
   STATIC_PROPS.angle = 0;
   squareMass = new RectBody(205, 3400, 150, 150, NORMAL_PROPS);
 
-  // squarePlatform2 = new RectBody(1330, 3650, 300, 10, STATIC_PROPS);
-
   for (var belt = 0; belt < 10; belt++) {
 
     conveyor = new Conveyor(1245 + 85 * belt, 4100, 40, STATIC_PROPS, 0, -0.02);
@@ -130,8 +132,8 @@ function create () {
 
   }
 
-  STATIC_PROPS.angle = PI / 8;
-  bouncePad = new Trampoline(3900, 5200, 300, 10, 2, STATIC_PROPS, 0.5);
+  NORMAL_PROPS.angle = PI / 4;
+  bouncePad = new Trampoline(3900, 5200, 300, 10, 2, NORMAL_PROPS);
   bouncePad.setLookOut(squareMass);
 
   STATIC_PROPS.angle = -PI / 20;
@@ -150,8 +152,8 @@ function create () {
 
     for (column = 0; column < 5; column++) {
 
-      NORMAL_PROPS.isStatic = true;
       balls.push(new CircBody(5310 + row * 120, 4600 + column * 120, 50, NORMAL_PROPS));
+      Matter.Body.setStatic(balls[balls.length - 1].body, true);
   
     }
 
@@ -175,16 +177,28 @@ function create () {
   seesaw2 = new Balance(3400, 7900, 1200, 30, NORMAL_PROPS);
   seesaw3 = new Balance(2400, 8300, 1200, 30, NORMAL_PROPS);
   seesaw4 = new Balance(3400, 8700, 1200, 30, NORMAL_PROPS);
-  seesaw5 = new Balance(2000, 9600, 2250, 30, NORMAL_PROPS);
+  seesaw5 = new Balance(2000, 9600, 2320, 30, NORMAL_PROPS);
 
-  slab = new RectBody(850, 9300, 200, 10, STATIC_PROPS);
-  projectile = new CircBody(850, 9200, 200, NORMAL_PROPS);
+  slab = new RectBody(850, 9300, 50, 10, STATIC_PROPS);
+  projectile = new CircBody(850, 9200, 100, NORMAL_PROPS);
 
-  // wind = new WindCannon(1600, 11000, -PI / 4, STATIC_PROPS);
-  wind = new WindCannon(1000, 11000, PI / 3, STATIC_PROPS);
-  wind.setLookOut(projectile);
+  NORMAL_PROPS.angle = -PI / 4;
+  launch = new Trampoline(800, 13400, 1200, 10, 20, NORMAL_PROPS);
+  launch.setLookOut(projectile);
 
-  b = new RectBody(1100, 11000, 100, 100, NORMAL_PROPS);
+  STATIC_PROPS.angle = 0;
+  boxPlatform = new RectBody(-3100, 12500, 3000, 10, STATIC_PROPS);
+  
+  NORMAL_PROPS.angle = 0;
+  for (row = 0; row < 23; row++) {
+
+    for (column = 0; column < 15; column++) {
+
+      blocks.push(new RectBody(-4200 + row * 100, 11000 + column * 100, 100, 100, NORMAL_PROPS));
+  
+    }
+
+  }
   
 }
 
