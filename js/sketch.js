@@ -11,6 +11,7 @@ function setup () {
   canvas = createCanvas(WIDTH, HEIGHT, WEBGL);
   cam = createCamera();
   create();
+  // cam.setPosition(-3000, 11000, 5000);
 
 }
 
@@ -219,7 +220,6 @@ function create () {
   Matter.World.add(engine.world, mouseConstraint);
 
   camJourney();
-  // setFocus(bird.body);
   
 }
 
@@ -282,6 +282,7 @@ function collisions () {
     
     Matter.Body.translate(block1.body, { x: 0, y: -100 });
     despawn(block1); despawn(block2); despawn(block3); despawn(squareMass);
+    huh = true;
 
     for (var body = 0; body < balls.length; body++) { accelerate(balls[body].body, PI, 0.001); }
 
@@ -289,6 +290,7 @@ function collisions () {
     dX = -5;
     dY = 3;
     dZ = 3;
+    CAM_SCALE += 1;
   
   }
 
@@ -311,12 +313,6 @@ function collisions () {
 
   for (let b in blocks) { if (collides(blocks[b].body, projectile.body)) { fin = true; } }
 
-  // if (fin) {
-
-  //   for (let b in blocks) { accelerate(blocks[b].body, random(0, 2 * PI), random(0, 1)); }
-
-  // }
-
 }
 
 function camJourney () {
@@ -336,8 +332,114 @@ function messages () {
 
   fill("#b0b0b0");
   textFont(defaultFont);
+  textAlign(CENTER);
   textSize(100);
-  text("my rube goldberg project!", -500, -100);
+
+  text("my rube goldberg project!", 0, -100);
+
+  text("lets learn some physics!", 1500, 500);
+
+  text("lesson 1: momentum", 2000, 1480);
+
+  textSize(125);
+  text("remember, momentum is CONSERVED!", 2500, 1650);
+
+  textSize(100);
+  text("lesson 2: gravity", 1280, 2300);
+  text("force of gravity on an object", 1600, 2700);
+  text(" = mass × gravity", 1600, 2850);
+
+  textSize(50);
+  text("ooh so spinny", 3000, 2000);
+
+  textSize(100);
+  text("lesson 3: portals", 3300, 3000);
+  text("wait... what?", 3300, 3300);
+  textSize(50);
+  text("those aren't supposed to exist...", 3300, 3400);
+
+  textSize(75);
+  text("lets pretend that didnt happen...", -500, 3200);
+  text("moving on...", 700, 3500);
+  textSize(100);
+  text("RAMPS!", 900, 3600);
+  textSize(50);
+  text("here, the acceleration \nof the object is...", 400, 3800);
+  textSize(85);
+  text("a = [ (force of gravity × sin of angle) - \n(force of kinetic friction) ] / mass", 400, 4050);
+
+  textSize(100);
+  text("but what's friction?", 1650, 4000);
+  textSize(75);
+  text("lesson 4: friction", 1650, 4250);
+  textSize(100);
+  text("friction = (coefficient of friction) × (normal force)", 1650, 4400);
+  textSize(80);
+  text("friction is what allows this coneyor belt to move the mass!", 2850, 4750);
+
+  textSize(100);
+  text("lesson 5: energy", 4400, 4700);
+  textSize(75);
+  text("gravitational potential energy \nv\n spring potential energy \nv\n kinetic energy", 4400, 4900);
+  text("gravitational potential energy = mass × gravity × height", 3000, 5500);
+  text("spring potential energy = 1/2 × spring constant × (compression)²", 3000, 5700);
+  text("kinetic energy = 1/2 × (mass × velocity²)", 3000, 5900);
+
+  textSize(75);
+  text("and remember, mass can never", 5700, 6000);
+  textSize(100);
+  text("ever", 5700, 6150);
+  textSize(75);
+  text("be created or destroyed!", 5700, 6300);
+
+  if (huh) {
+
+    textSize(200);
+    text("huh???", 4800, 5900);
+
+  }
+
+  textSize(100);
+  text("lesson 6: ramps, pt 2", 3300, 6300);
+  textSize(75);
+  text("with circles, the only thing different is friction!", 2900, 6400);
+  text("this time, we use the coefficient of static friction", 2800, 6500);
+
+  textSize(100);
+  text("stick with me, we're almost done!", 3800, 7150);
+
+  textSize(130);
+  text("lesson 7: torque", 1500, 7200);
+  textSize(100);
+  text("torque = force × radius", 1500, 7450);
+  text("torque is what rotates an object!", 2900, 7650);
+  text("clockwise torques vs counter clockwise torques", 2900, 7800);
+  textSize(120);
+  text("are what make the world go round!", 2900, 8150);
+  textSize(100);
+  text("\"so, ankit, are you an innie or an outie?\"", 1300, 8800);
+  textSize(75);
+  text("- mr. cochrum, 2022, when teaching us torque", 1300, 8950);
+
+  textSize(300);
+  text("lesson 8: projectiles", -200, 11800);
+  textSize(175);
+  text("projectiles are objects that are launched", -200, 12050);
+  text("with a certain velocity and angle!", -200, 12250);
+  text("they can make things go", -3100, 12650);
+  textSize(700);
+  text("shkaboom", -3100, 13200);
+
+  textSize(100);
+  text("click to fire", -7700, 12750);
+  text("press enter to reload", -6500, 12750);
+
+  textSize(200);
+  text("lesson 9: the end", -3100, 11600);
+  textSize(175);
+  text("thank you for watching!", -3100, 11800);
+  textSize(150);
+  text("pls give me an A", -2600, 12100);
 
 }
 
@@ -352,8 +454,8 @@ function draw () {
   background(BACKGROUND_COLOR);
   messages();
   collisions();
-  for (var body = 0; body < portals.length; body++) { portals[body].show(); }
-  for (var body = 0; body < allBodies.length; body++) { if (allBodies[body].exists) { allBodies[body].show(); } }
+  for (var body = 0; body < portals.length; body++) { if (onScreen(portals[body].body)) { portals[body].show(); } }
+  for (var body = 0; body < allBodies.length; body++) { if (allBodies[body].exists && onScreen(allBodies[body].body)) { allBodies[body].show(); } }
   angry();
   
 }
@@ -387,3 +489,19 @@ function accelerate (body, direction, magnitude) {
 }
 
 function despawn (body) { Matter.World.remove(engine.world, body.body); body.exists = false; }
+
+function onScreen (body) {
+
+  if (body.position.x > cam.eyeX - (CAM_SCALE * WIDTH) && body.position.x < cam.eyeX + (CAM_SCALE * WIDTH)) {
+
+    if (body.position.y > cam.eyeY - (CAM_SCALE * HEIGHT) && body.position.y < cam.eyeY + (CAM_SCALE * HEIGHT)) {
+
+      return true;
+
+    }
+
+  }
+
+  return false;
+
+}

@@ -102,8 +102,8 @@ var Engine = Matter.Engine,
     Events = Matter.Events;
 
 var engine = Engine.create(), cam, dX = 0, dY = 0, dZ = 0, tracking = false;
-var DEBUG = true, CAM_SPEED = 100;
-var item, fin = false;
+var DEBUG = true, CAM_SPEED = 100, CAM_SCALE = 1.5;
+var item, fin = false, huh = false;
 
 var allBodies = [], dominos = [], portals = [], balls = [], blocks = [], boxes = [];
 
