@@ -42,13 +42,13 @@ function Portal (x, y, angle, scaleFactor) {
         
         ellipse(0, 0, 100, this.h);
 
-        if (DEBUG) {
+        // if (DEBUG) {
 
-            noStroke();
-            fill(this.props.render.strokeStyle);
-            rect (100, -10, 20, 20);
+        //     noStroke();
+        //     fill(this.props.render.strokeStyle);
+        //     rect (100, -10, 20, 20);
 
-        }
+        // }
 
         pop();
 
@@ -78,6 +78,7 @@ function Portal (x, y, angle, scaleFactor) {
                         var tY = this.otherPortal.body.position.y - body.position.y;
                         Matter.Body.translate(body, { x: tX, y: tY });
                         Matter.Body.rotate(body, this.otherPortal.body.angle - this.body.angle);
+                        warpSound.play();
 
                     }
 

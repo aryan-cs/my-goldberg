@@ -92,12 +92,20 @@ var Engine = Matter.Engine,
     Render = Matter.Render,
     Runner = Matter.Runner,
     Bodies = Matter.Bodies,
-    Composite = Matter.Composite;
-var engine = Engine.create(), cam;
-var DEBUG = true, CAM_SPEED = 100;
-var item;
+    Body = Matter.Body,
+    Composite = Matter.Composite,
+    Composites = Matter.Composites,
+    Constraint = Matter.Constraint,
+    MouseConstraint = Matter.MouseConstraint,
+    Mouse = Matter.Mouse,
+    World = Matter.World,
+    Events = Matter.Events;
 
-var allBodies = [], dominos = [], portals = [], balls = [], blocks = [];
+var engine = Engine.create(), cam, dX = 0, dY = 0, dZ = 0, tracking = false;
+var DEBUG = true, CAM_SPEED = 100;
+var item, fin = false;
+
+var allBodies = [], dominos = [], portals = [], balls = [], blocks = [], boxes = [];
 
 var NORMAL_PROPS = {
 
@@ -116,6 +124,7 @@ var NORMAL_PROPS = {
 var STATIC_PROPS = {
 
   isStatic: true,
+  friction: 0,
 
   render: {
 

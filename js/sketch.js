@@ -1,16 +1,16 @@
 function preload () {
   
   defaultFont = loadFont("assets/fonts/default.ttf");
+  popSound = loadSound("assets/sfx/pop.mp3");
+  warpSound = loadSound("assets/sfx/warp.mp3");
 
 }
 
 function setup () {
 
-  createCanvas(WIDTH, HEIGHT, WEBGL);
-  create();
-
+  canvas = createCanvas(WIDTH, HEIGHT, WEBGL);
   cam = createCamera();
-  cam.setPosition(1000, 10000, 8000);
+  create();
 
 }
 
@@ -60,7 +60,7 @@ function create () {
 
     }
 
-    setFocus(allBodies[allBodies.length - 7].body);
+    // setFocus(allBodies[allBodies.length - 7].body);
 
   }
 
@@ -83,7 +83,9 @@ function create () {
 
   }
 
-  allBodies[allBodies.length - 1].body.mass = 200;
+  fallDom = allBodies[allBodies.length - 1];
+  fallDom.body.mass = 200;
+  hitDom = allBodies[allBodies.length - 2];
 
   propeller1 = new Propeller(3300, 1900, 300, 10, STATIC_PROPS, 0, 0.05);
   propeller2 = new Propeller(2700, 2100, 300, 10, STATIC_PROPS, 0, -0.02);
@@ -128,7 +130,7 @@ function create () {
 
   for (var belt = 0; belt < 20; belt++) {
 
-    conveyor = new Conveyor(2045 + 85 * belt, 4600, 40, STATIC_PROPS, 0, 0.01 * -1 * sqrt(belt + 1));
+    conveyor = new Conveyor(2045 + 85 * belt, 4600, 40, STATIC_PROPS, 0, -0.05 * (belt + 1));
 
   }
 
@@ -199,21 +201,60 @@ function create () {
     }
 
   }
+
+  ground = new Ground(-7000, 12500, WIDTH, 20);
+  bird = new Bird(-7000, 12500, 200);
+  sling = new Sling(-7000, 11500, bird.body);
+
+  // mouse = Matter.Mouse.create(canvas.elt);
+  // let options = { mouse: mouse, constraint: { stiffness: 0.05, render: { visible: false } } };
+  // mouse.pixelRatio = pixelDensity();
+  // mouseConstrain = Matter.MouseConstraint.create(engine, options);
+  // Matter.World.add(engine.world, mouseConstrain);
+
+  mouse = Matter.Mouse.create(canvas.elt);
+  mouseParams = { mouse: mouse, constraint:{ stiffness: 0.05, angularStiffness: 0 }};
+  mouseConstraint = Matter.MouseConstraint.create(engine, mouseParams);
+  mouseConstraint.mouse.pixelRatio = pixelDensity();
+  Matter.World.add(engine.world, mouseConstraint);
+
+  camJourney();
+  // setFocus(bird.body);
   
 }
 
-function mouseClicked () {
+function angry () {
 
-  // var item = new RectBody((mouseX - WIDTH / 2) + cam.centerX, (mouseY - HEIGHT / 2) + cam.centerY, 50, 50, NORMAL_PROPS);
+  ground.show();
+  for (let i in boxes) { boxes[i].show(); }
+  bird.show();
+  sling.show()
 
 }
+
+function mouseReleased () { setTimeout(() => { sling.fly(); accelerate(bird.body, PI / 35, 175); }, 50); }
+
+// function mouseClicked () {
+
+//   // var item = new RectBody((mouseX - WIDTH / 2) + cam.centerX, (mouseY - HEIGHT / 2) + cam.centerY, 50, 50, NORMAL_PROPS);
+
+// }
 
 
 function keyPressed () {
 
   if (keyCode == ENTER) {
 
-    console.log("entered")
+    Matter.World.remove(engine.world, bird.body);
+    bird = new Bird(-7000, 12500, 200);
+    sling.body = bird.body;
+    sling.constrain.bodyB = sling.body;
+
+  }
+
+  if (key == " ") {
+
+    for (let b in blocks) { accelerate(blocks[b].body, random(0, 2 * PI), random(0, 3)); }
 
   }
 
@@ -221,17 +262,73 @@ function keyPressed () {
 
 function collisions () {
 
-  if (collides(dominos[0].body, squareMass.body)) { accelerate(squareMass.body, 0, 0.25); }
+  if (collides(dominos[0].body, squareMass.body)) {
+    
+    accelerate(squareMass.body, 0, 0.25);
+
+    setTimeout(() => {
+    
+      setFocus(squareMass.body);
+      dX = 0;
+      dZ = 0;
+
+    }, 500);
+  
+  }
 
   if (collides(bouncePad.body, squareMass.body)) { for (var b = 0; b < balls.length; b++) { Matter.Body.setStatic(balls[b].body, false); } }
 
   if (collides(squareMass.body, block1.body)) {
     
+    Matter.Body.translate(block1.body, { x: 0, y: -100 });
     despawn(block1); despawn(block2); despawn(block3); despawn(squareMass);
 
     for (var body = 0; body < balls.length; body++) { accelerate(balls[body].body, PI, 0.001); }
+
+    tracking = false;
+    dX = -5;
+    dY = 3;
+    dZ = 3;
   
   }
+
+  if (collides(hitDom.body, fallDom.body)) { setFocus(fallDom.body); dX = 0; }
+
+  if (collides(portal1.body, dominos[0].body)) { tracking = false; dX = -20; dZ = -2; dY = 6; }
+
+  if (collides(projectile.body, launch.body)) {
+
+    setTimeout(() => {
+
+      dX = 0;
+      dY = 0;
+      dZ = 0;
+      tracking = false;
+
+    }, 1000);
+
+  }
+
+  for (let b in blocks) { if (collides(blocks[b].body, projectile.body)) { fin = true; } }
+
+  // if (fin) {
+
+  //   for (let b in blocks) { accelerate(blocks[b].body, random(0, 2 * PI), random(0, 1)); }
+
+  // }
+
+}
+
+function camJourney () {
+
+  tracking = false;
+
+  cam.setPosition(1500, 500, 2000);
+  setTimeout(() => { dY = 5; }, 1000);
+  setTimeout(() => { dX = 1; dY = 15; dZ = -10; }, 3500);
+  setTimeout(() => { dX = 5; dY = 0; dZ = 0; }, 4000);
+  setTimeout(() => { dX = 1; dY = 0; dZ = 0; }, 5000);
+  // setTimeout(() => { track(fallDom.body); dX = 0; }, 15000);
 
 }
 
@@ -240,21 +337,24 @@ function messages () {
   fill("#b0b0b0");
   textFont(defaultFont);
   textSize(100);
-  text("press enter to begin!", -500, -100);
+  text("my rube goldberg project!", -500, -100);
 
 }
 
 function draw () {
 
   Matter.Engine.update(engine);
-  // track(focusedBody);
+
   camControls();
+  if (!tracking) { cam.move(dX, dY, dZ); }
+  else { track(focusedBody); }
 
   background(BACKGROUND_COLOR);
   messages();
   collisions();
   for (var body = 0; body < portals.length; body++) { portals[body].show(); }
   for (var body = 0; body < allBodies.length; body++) { if (allBodies[body].exists) { allBodies[body].show(); } }
+  angry();
   
 }
 
@@ -273,9 +373,9 @@ function camControls () {
 
 }
 
-function setFocus (body) { focusedBody = body; }
+function setFocus (body) { tracking = true; focusedBody = body; }
 
-function track (trackBody) { cam.setPosition(trackBody.position.x, trackBody.position.y, 1000); }
+function track (trackBody) { cam.setPosition(trackBody.position.x, trackBody.position.y, 2000); }
 
 function collides (entity1, entity2) { return Matter.Collision.collides(entity1, entity2) != null; }
 
